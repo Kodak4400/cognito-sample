@@ -25,6 +25,7 @@ export const stackEnv = {
   stage
 };
 
+// Lambda@EdgeをNodejsFunctionをつかって実装するのは手間なので、コメントアウト
 // new LambdaEdgeStack(app, "LambdaEdge-Stack", stackEnv);
 
 new S3Stack(app, "Create-S3-Stack", stackEnv);

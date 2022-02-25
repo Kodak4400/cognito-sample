@@ -24,6 +24,11 @@ export class CloudFrontStack extends Stack {
       code: lambda.Code.fromAsset('dist/auth'),
       handler: 'index.handler',
       runtime: lambda.Runtime.NODEJS_14_X,
+      environment: {
+        USER_POOL_ID: runCode(`return process.env.${params.USER_POOL_ID}`),
+        TOKEN_USE: runCode(`return process.env.${params.TOKEN_USE}`),
+        CLIENT_ID: runCode(`return process.env.${params.CLIENT_ID}`),
+      },
     })
 
     const s3Bucket = s3.Bucket.fromBucketName(this, 'Get-S3Bucket-Origin', params.STATIC_STATIC_WEBSITE_HOSTING_BUCKET)

@@ -4,5 +4,5 @@
   "editor.formatOnSave": false,
   "editor.formatOnType": true,
   "editor.codeActionsOnSave": ["source.organizeImports", "source.fixAll.eslint"],
-  "cSpell.words": ["vite", "vitejs", "metainfo", "NuKinakoMochi", "composables", "vuex", "edgelambda", "unplugin"],
+  "cSpell.words": ["vite", "vitejs", "metainfo", "NuKinakoMochi", "composables", "vuex", "edgelambda", "unplugin", "dazn", "powertools"],
 }
