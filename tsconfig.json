@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "useDefineForClassFields": true,
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "strict": true,
     "jsx": "preserve",
@@ -10,11 +10,19 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
     "types": [
       "vite/client",
       "vite-plugin-pages/client"
     ]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [
+    { "path": "./deploy"},
+  ]
 }

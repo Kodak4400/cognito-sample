@@ -1,1 +1,1 @@
-export const S3BucketName = 'cognito.sample.web.kodak.dev'
+export const runCode = (code: string): string => Function(code)();

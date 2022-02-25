@@ -7,7 +7,7 @@
   </ul>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useHead } from '@vueuse/head'
 useHead({
   title: 'Hello, Vite + vite-vue-pages + ViteSSG'

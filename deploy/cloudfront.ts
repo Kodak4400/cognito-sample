@@ -1,27 +1,37 @@
-import { Stack, StackProps, Duration, RemovalPolicy } from 'aws-cdk-lib'
-import { aws_s3 as s3 } from 'aws-cdk-lib';
-import { aws_cloudfront as cloudfront } from 'aws-cdk-lib';
-import { aws_cloudfront_origins as cloudfrontOrigins } from 'aws-cdk-lib';
-import { aws_lambda as lambda } from 'aws-cdk-lib'
-import { S3BucketName } from './utils';
-import { Construct } from 'constructs';
+import {
+  aws_cloudfront as cloudfront,
+  aws_cloudfront_origins as cloudfrontOrigins,
+  aws_lambda as lambda,
+  aws_s3 as s3,
+  Stack,
+  StackProps
+} from 'aws-cdk-lib'
+import { Construct } from 'constructs'
+import { CdkJsonParams, Stage } from './@types/resource'
+import { runCode } from './utils'
+
+interface extendProps extends StackProps {
+  stage: Stage
+}
 
 export class CloudFrontStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+  constructor(scope: Construct, id: string, props: extendProps) {
     super(scope, id, props)
 
-    const jwtVerifyEdgeFunction = new cloudfront.experimental.EdgeFunction(this, 'Jwt-Verify-Edge-Function', {
+    const params: CdkJsonParams[Stage] = this.node.tryGetContext(props.stage)
+
+    const jwtVerifyEdgeFunction = new cloudfront.experimental.EdgeFunction(this, 'Create-Jwt-Verify-Edge-Function', {
       code: lambda.Code.fromAsset('dist/auth'),
       handler: 'index.handler',
       runtime: lambda.Runtime.NODEJS_14_X,
     })
 
-    const s3Bucket = s3.Bucket.fromBucketName(this, 'Get-S3Bucket-Origin', S3BucketName)
+    const s3Bucket = s3.Bucket.fromBucketName(this, 'Get-S3Bucket-Origin', params.STATIC_STATIC_WEBSITE_HOSTING_BUCKET)
     const bucketNameUrl = s3Bucket.bucketWebsiteUrl.replace('http://', '')
     const s3Origin = new cloudfrontOrigins.HttpOrigin(bucketNameUrl, {
       httpPort: 80,
       customHeaders: {
-        Referer: 'Amazon CloudFront',
+        Referer: runCode(`return process.env.${params.CLOUDFRONT_REFERER}`),
       },
       protocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY,
     })
@@ -72,7 +82,7 @@ export class CloudFrontStack extends Stack {
     }
 
     const loggingBucket = new s3.Bucket(this, `Create-CloudFront-Log-Bucket`, {
-      bucketName: 'cognito.sample.cloudfront.log.kodak.dev',
+      bucketName: params.CLOUDFRONT_LOG_BUCKET,
     })
 
     const cfDistribution = new cloudfront.Distribution(this, 'Create-CloudFront', {
@@ -89,7 +99,5 @@ export class CloudFrontStack extends Stack {
       // webAclId: this.wafId,
       logBucket: loggingBucket,
     })
-
-
   }
 }

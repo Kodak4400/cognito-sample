@@ -1,14 +1,25 @@
-import { Stack, StackProps, Duration, RemovalPolicy } from 'aws-cdk-lib'
-import { aws_lambda_nodejs as lambda_nodejs } from 'aws-cdk-lib'
-import { aws_lambda as lambda } from 'aws-cdk-lib'
-import { aws_logs as logs } from 'aws-cdk-lib'
-import { aws_iam as iam } from 'aws-cdk-lib'
-import { aws_ssm as ssm } from 'aws-cdk-lib'
+import {
+  aws_iam as iam,
+  aws_lambda as lambda,
+  aws_lambda_nodejs as lambda_nodejs,
+  aws_logs as logs,
+  RemovalPolicy,
+  Stack,
+  StackProps
+} from 'aws-cdk-lib'
 import { Construct } from 'constructs'
+import { CdkJsonParams, Stage } from './@types/resource'
+import { runCode } from './utils'
+
+interface extendProps extends StackProps {
+  stage: Stage
+}
 
 export class LambdaEdgeStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+  constructor(scope: Construct, id: string, props: extendProps) {
     super(scope, id, props)
+
+    const params: CdkJsonParams[Stage] = this.node.tryGetContext(props.stage)
 
     // Lambda@Edge
     const lambdaRole = new iam.Role(this, 'lambdaRole', {
@@ -26,14 +37,18 @@ export class LambdaEdgeStack extends Stack {
       handler: 'handler',
       role: lambdaRole,
       awsSdkConnectionReuse: false,
-      environment: {},
+      environment: {
+        USER_POOL_ID: runCode(`return process.env.${params.USER_POOL_ID}`),
+        TOKEN_USE: runCode(`return process.env.${params.TOKEN_USE}`),
+        CLIENT_ID: runCode(`return process.env.${params.CLIENT_ID}`),
+      },
     })
     const uniqueVersionId = `${new Date().getTime()}`
     const jwtVerifyFunctionVersion = new lambda.Version(this, `Jwt-Verify-FunctionVersion-${uniqueVersionId}`, {
       lambda: jwtVerifyFunction,
     })
-    const jwtVerifyFunctionAlias = new lambda.Alias(this, 'Jwt-Verify-FunctionAlias', {
-      aliasName: 'dev',
+    new lambda.Alias(this, 'Jwt-Verify-FunctionAlias', {
+      aliasName: props.stage,
       version: jwtVerifyFunctionVersion,
     })
 
@@ -42,11 +57,5 @@ export class LambdaEdgeStack extends Stack {
       retention: logs.RetentionDays.ONE_DAY,
       removalPolicy: RemovalPolicy.DESTROY,
     })
-
-    // Parameter storeに書き込む
-    // new ssm.StringParameter(this, 'SSM-Jwt-Verify-FunctionArn', {
-    //   stringValue: jwtVerifyFunction.functionArn,
-    //   parameterName: `/lambda/jwt-verify-function-arn`,
-    // })
   }
 }

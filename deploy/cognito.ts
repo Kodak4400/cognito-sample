@@ -1,17 +1,24 @@
-import { Stack, StackProps, RemovalPolicy } from 'aws-cdk-lib'
-import { aws_cognito as cognito } from 'aws-cdk-lib'
+import { aws_cognito as cognito, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { CdkJsonParams, Stage } from './@types/resource';
+import { runCode } from './utils';
+
+interface extendProps extends StackProps {
+  stage: Stage
+}
 
 export class CognitoStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
-    super(scope, id, props);
+  constructor(scope: Construct, id: string, props: extendProps) {
+    super(scope, id, props)
+
+    const params: CdkJsonParams[Stage] = this.node.tryGetContext(props.stage)
 
     const userPool = new cognito.UserPool(this, 'Create-Cognito-UserPool', {
-      userPoolName: 'SampleUserPool',
+      userPoolName: runCode(`return process.env.${params.USER_POOL_NAME}`),
       removalPolicy: RemovalPolicy.DESTROY,
     })
     userPool.addClient('Create-Cognito-UserPool-Client', {
-      userPoolClientName: 'SampleUserPoolClient',
+      userPoolClientName: runCode(`return process.env.${params.USER_POOL_CLIENT_NAME}`),
     })
   }
 }

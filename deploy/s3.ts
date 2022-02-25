@@ -1,15 +1,20 @@
-import { Stack, StackProps, RemovalPolicy } from 'aws-cdk-lib'
-import { aws_s3 as s3 } from 'aws-cdk-lib';
-import { aws_iam as iam } from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-import { S3BucketName } from './utils';
+import { aws_iam as iam, aws_s3 as s3, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib'
+import { Construct } from 'constructs'
+import { CdkJsonParams, Stage } from './@types/resource'
+import { runCode } from './utils'
+
+interface extendProps extends StackProps {
+  stage: Stage
+}
 
 export class S3Stack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
-    super(scope, id, props);
+  constructor(scope: Construct, id: string, props: extendProps) {
+    super(scope, id, props)
 
-    const webBucket = new s3.Bucket(this, `Create-Web-Bucket`, {
-      bucketName: S3BucketName,
+    const params: CdkJsonParams[Stage] = this.node.tryGetContext(props.stage)
+
+    const webBucket = new s3.Bucket(this, `Create-StaticWebsiteHosting-Bucket`, {
+      bucketName: params.STATIC_STATIC_WEBSITE_HOSTING_BUCKET,
       websiteIndexDocument: 'index.html',
       websiteErrorDocument: '404.html',
       publicReadAccess: false,
@@ -23,7 +28,7 @@ export class S3Stack extends Stack {
       principals: [new iam.AnyPrincipal()],
       conditions: {
         StringEquals: {
-          'aws:referer': ['Amazon CloudFront'],
+          'aws:referer': [runCode(`return process.env.${params.CLOUDFRONT_REFERER}`)],
         },
       },
     })
