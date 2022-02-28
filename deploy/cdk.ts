@@ -3,8 +3,6 @@ import * as dotenv from "dotenv";
 import { Stage } from './@types/resource';
 // import { CloudFrontStack } from './cloudfront';
 import { CognitoStack } from './cognito';
-// import { LambdaEdgeStack } from './edge';
-import { S3Stack } from "./s3";
 
 const result = dotenv.config();
 if (result.error) {
@@ -28,6 +26,7 @@ export const stackEnv = {
 // Lambda@EdgeをNodejsFunctionをつかって実装するのは手間なので、コメントアウト
 // new LambdaEdgeStack(app, "LambdaEdge-Stack", stackEnv);
 
-new S3Stack(app, "Create-S3-Stack", stackEnv);
+new CognitoStack(app, 'Create-Cognito-Stack-Test', stackEnv)
+
+// new S3Stack(app, "Create-S3-Stack", stackEnv);
 // new CloudFrontStack(app, 'Create-CloudFront-Stack', stackEnv)
-new CognitoStack(app, 'Create-Cognito-Stack', stackEnv)

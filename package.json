@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@dazn/lambda-powertools-logger": "^1.28.1",
+    "amazon-cognito-identity-js": "^5.2.6",
     "aws-cdk": "^2.13.0",
     "aws-cdk-lib": "^2.13.0",
     "aws-jwt-verify": "^2.1.3",

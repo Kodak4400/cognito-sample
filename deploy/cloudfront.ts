@@ -26,7 +26,6 @@ export class CloudFrontStack extends Stack {
       runtime: lambda.Runtime.NODEJS_14_X,
       environment: {
         USER_POOL_ID: runCode(`return process.env.${params.USER_POOL_ID}`),
-        TOKEN_USE: runCode(`return process.env.${params.TOKEN_USE}`),
         CLIENT_ID: runCode(`return process.env.${params.CLIENT_ID}`),
       },
     })

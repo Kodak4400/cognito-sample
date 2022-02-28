@@ -20,5 +20,7 @@ export class CognitoStack extends Stack {
     userPool.addClient('Create-Cognito-UserPool-Client', {
       userPoolClientName: runCode(`return process.env.${params.USER_POOL_CLIENT_NAME}`),
     })
+
+    console.log(runCode(`return process.env.${params.USER_POOL_CLIENT_NAME}`))
   }
 }
