@@ -21,7 +21,7 @@ export class CloudFrontStack extends Stack {
     const params: CdkJsonParams[Stage] = this.node.tryGetContext(props.stage)
 
     const jwtVerifyEdgeFunction = new cloudfront.experimental.EdgeFunction(this, 'Create-Jwt-Verify-Edge-Function', {
-      code: lambda.Code.fromAsset('dist/auth'),
+      code: lambda.Code.fromAsset('cdk-dist/edge'),
       handler: 'index.handler',
       runtime: lambda.Runtime.NODEJS_14_X,
       environment: {

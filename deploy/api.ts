@@ -9,7 +9,7 @@ interface extendProps extends StackProps {
   stage: Stage
 }
 
-export class APIStack extends Stack {
+export class ApiStack extends Stack {
   constructor(scope: Construct, id: string, props: extendProps) {
     super(scope, id, props)
 
@@ -22,7 +22,7 @@ export class APIStack extends Stack {
     })
 
     const authLambda = new lambda.Function(this, 'Create-AuthLambda', {
-      code: lambda.Code.fromAsset('cdk-dist/auth/handler'),
+      code: lambda.Code.fromAsset('cdk-dist/auth'),
       handler: 'index.handler',
       runtime: lambda.Runtime.NODEJS_14_X,
       environment: {
@@ -55,19 +55,18 @@ export class APIStack extends Stack {
     })
 
     httpApi.addRoutes({
-      path: '/user',
-      methods: [apigwv2.HttpMethod.GET],
+      path: '/api/signin',
+      methods: [apigwv2.HttpMethod.POST],
       integration: authIntegration,
     })
     httpApi.addRoutes({
-      path: '/user',
+      path: '/api/signup',
       methods: [apigwv2.HttpMethod.POST],
       integration: authIntegration,
     })
 
     new apigwv2.HttpStage(this, 'Stage', {
       httpApi: httpApi,
-      stageName: 'beta',
     })
   }
 }

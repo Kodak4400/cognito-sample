@@ -1,4 +1,4 @@
-import CdkJson from "../../cdk.json";
+import CdkJson from '../../cdk.json'
 
-export type CdkJsonParams = typeof CdkJson["context"];
-export type Stage = "dev" | "prod";
+export type CdkJsonParams = typeof CdkJson['context']
+export type Stage = 'dev' | 'prod'

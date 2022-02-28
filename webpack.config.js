@@ -4,7 +4,8 @@ const nodeExternals = require('webpack-node-externals')
 module.exports = {
   target: 'node',
   entry: {
-    auth: path.resolve(__dirname, './deploy/lambda/edge/index.ts'),
+    edge: path.resolve(__dirname, './deploy/lambda/edge/index.ts'),
+    auth: path.resolve(__dirname, './deploy/lambda/auth/index.ts'),
   },
   // build時は`dependencies`だけを読み込むようにする
   externals: [

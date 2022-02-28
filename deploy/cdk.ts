@@ -1,8 +1,9 @@
 import { App } from "aws-cdk-lib";
 import * as dotenv from "dotenv";
 import { Stage } from './@types/resource';
+import { ApiStack } from './api';
 // import { CloudFrontStack } from './cloudfront';
-import { CognitoStack } from './cognito';
+// import { CognitoStack } from './cognito';
 
 const result = dotenv.config();
 if (result.error) {
@@ -26,7 +27,8 @@ export const stackEnv = {
 // Lambda@EdgeをNodejsFunctionをつかって実装するのは手間なので、コメントアウト
 // new LambdaEdgeStack(app, "LambdaEdge-Stack", stackEnv);
 
-new CognitoStack(app, 'Create-Cognito-Stack-Test', stackEnv)
+// new CognitoStack(app, 'Create-Cognito-Stack-Test', stackEnv)
+new ApiStack(app, 'Create-Api-Stack', stackEnv)
 
 // new S3Stack(app, "Create-S3-Stack", stackEnv);
 // new CloudFrontStack(app, 'Create-CloudFront-Stack', stackEnv)

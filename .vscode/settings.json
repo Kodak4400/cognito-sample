@@ -17,8 +17,9 @@
     "powertools",
     "apigwv2",
     "apigatewayv2",
-    "singnin",
-    "singnup",
-    "vitest"
+    "signin",
+    "signup",
+    "vitest",
+    "axios"
   ]
 }

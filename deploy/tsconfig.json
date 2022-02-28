@@ -10,5 +10,8 @@
     "skipLibCheck": true, // *.d.tsファイルの型チェックをスキップする
     "forceConsistentCasingInFileNames": true, // import時にファイルパスの文字列で大文字小文字を区別する
     "resolveJsonModule": true,
+    "rootDir": ".",
+    // "declaration": false
   },
+  "include": ["../cdk.json"],
 }

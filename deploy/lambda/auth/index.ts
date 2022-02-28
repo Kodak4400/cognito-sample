@@ -9,9 +9,9 @@ export const handler: APIGatewayProxyHandlerV2 = async event => {
     Log.info('Received event:', { event })
 
     switch (event.routeKey) {
-      case 'POST /api/singnin':
+      case 'POST /api/signin':
         return await new SignIn().handler(event)
-      case 'POST /api/singup':
+      case 'POST /api/signup':
         return await new SignUp().handler(event)
       default:
         return await httpResponseBuilder(400, {
