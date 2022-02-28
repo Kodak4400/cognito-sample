@@ -8,7 +8,8 @@
     "build": "yarn clean && cross-env vite-ssg build",
     "build:edge": "yarn clean && webpack --mode development",
     "preview": "vite preview",
-    "dev-cdk-synth": "npx cdk synth -c env=dev"
+    "dev-cdk-synth": "npx cdk synth -c env=dev",
+    "test": "vitest"
   },
   "dependencies": {
     "@dazn/lambda-powertools-logger": "^1.28.1",
@@ -21,12 +22,15 @@
     "vue": "^3.2.25"
   },
   "devDependencies": {
+    "@aws-cdk/aws-apigatewayv2-alpha": "^2.14.0-alpha.0",
+    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.14.0-alpha.0",
     "@aws-sdk/client-lambda": "^3.53.0",
     "@types/aws-lambda": "^8.10.92",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
     "@vitejs/plugin-vue": "^2.2.0",
     "@vueuse/head": "^0.7.5",
+    "aws-lambda-mock-context": "^3.2.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.0",
     "eslint": "^8.9.0",
@@ -39,6 +43,7 @@
     "vite": "^2.8.0",
     "vite-plugin-pages": "^0.20.2",
     "vite-ssg": "^0.17.10",
+    "vitest": "^0.5.8",
     "vue-router": "^4.0.12",
     "vue-tsc": "^0.29.8",
     "webpack": "^5.69.1",

@@ -23,7 +23,8 @@ module.exports = {
   ],
   rules: {
     // 個別のルールがある場合は追記
-    '@typescript-eslint/no-unsafe-assignment': 'off'
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/require-await': 'off',
   },
 }
 
