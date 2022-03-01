@@ -1,17 +1,19 @@
 <template>
-  <form>
+  <div>
     <label>ユーザー名</label>
     <input type="text" v-model="username" />
     <label>パスワード</label>
     <input type="text" v-model="password" />
-    <button @click.prevent="login">ログイン</button>
-  </form>
+    <button @click="login">ログイン</button>
+    <a href="">新規登録(未実装)</a>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { useHead } from '@vueuse/head'
 import * as axios from 'axios'
 import { ref } from 'vue';
+import { useRouter } from 'vue-router'
 
 useHead({
   title: 'Cognito-Sample Login'
@@ -19,6 +21,7 @@ useHead({
 
 const username = ref('')
 const password = ref('')
+const router = useRouter()
 
 const login = async () => {
   const result = await axios.default.post('/api/login', {
@@ -26,15 +29,9 @@ const login = async () => {
     Password: password.value
   })
   if (result.status !== 200) {
-    console.error()
+    router.push('/404')
   }
-
+  router.push('/private')
 }
 
-return {
-  password,
-  username,
-  login,
-  // update
-}
 </script>

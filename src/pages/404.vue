@@ -1,8 +1,8 @@
 <template>
-  page 1
+  404 Not Found.
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useHead } from '@vueuse/head'
 useHead({
   title: 'Page 1'
