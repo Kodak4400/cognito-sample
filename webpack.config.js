@@ -1,5 +1,6 @@
 const path = require('path')
 const nodeExternals = require('webpack-node-externals')
+const Dotenv = require('dotenv-webpack')
 
 module.exports = {
   target: 'node',
@@ -24,6 +25,13 @@ module.exports = {
   },
   // source-mapの種類 => https://webpack.js.org/configuration/devtool/
   devtool: 'inline-source-map',
+
+  plugins: [
+    new Dotenv({
+      USER_POOL_ID: process.env.USER_POOL_ID,
+      CLIENT_ID: process.env.CLIENT_ID,
+    }),
+  ],
 
   module: {
     rules: [

@@ -24,13 +24,17 @@ const password = ref('')
 const router = useRouter()
 
 const login = async () => {
-  const result = await axios.default.post('/api/login', {
+  const hoge = axios
+  const result = await axios.default.post('https://t5vaz2h0fg.execute-api.ap-northeast-1.amazonaws.com/api/login', {
     Username: username.value,
     Password: password.value
+  }, {
+    headers: { 'Content-Type': 'application/json' }
   })
   if (result.status !== 200) {
     router.push('/404')
   }
+  alert(result.data)
   router.push('/private')
 }
 

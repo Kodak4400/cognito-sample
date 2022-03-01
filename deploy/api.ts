@@ -43,14 +43,15 @@ export class ApiStack extends Stack {
 
     const httpApi = new apigwv2.HttpApi(this, 'Create-HttpProxyApi', {
       corsPreflight: {
-        allowHeaders: ['Authorization'],
+        allowHeaders: ['Authorization', 'Content-Type'],
         allowMethods: [
           apigwv2.CorsHttpMethod.GET,
           apigwv2.CorsHttpMethod.HEAD,
           apigwv2.CorsHttpMethod.OPTIONS,
           apigwv2.CorsHttpMethod.POST,
         ],
-        allowOrigins: ['*'],
+        allowOrigins: ['https://d28a55f3780vki.cloudfront.net'],
+        allowCredentials: true,
       },
     })
 
@@ -63,10 +64,6 @@ export class ApiStack extends Stack {
       path: '/api/signup',
       methods: [apigwv2.HttpMethod.POST],
       integration: authIntegration,
-    })
-
-    new apigwv2.HttpStage(this, 'Stage', {
-      httpApi: httpApi,
     })
   }
 }
