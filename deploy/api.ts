@@ -1,6 +1,11 @@
 import * as apigwv2 from '@aws-cdk/aws-apigatewayv2-alpha'
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha'
-import { aws_iam as iam, aws_lambda as lambda, Duration, Stack, StackProps } from 'aws-cdk-lib'
+import {
+  aws_iam as iam,
+  aws_lambda as lambda,
+  aws_logs as logs, Duration, RemovalPolicy, Stack,
+  StackProps
+} from 'aws-cdk-lib'
 import { Construct } from 'constructs'
 import { CdkJsonParams, Stage } from './@types/resource'
 import { runCode } from './utils'
@@ -39,19 +44,19 @@ export class ApiStack extends Stack {
       version: authLambda.currentVersion,
     })
 
+    new logs.LogGroup(this, 'AuthLambda-Function-LogGroup', {
+      logGroupName: '/aws/lambda/' + authLambdaAlias.functionName,
+      retention: logs.RetentionDays.ONE_DAY,
+      removalPolicy: RemovalPolicy.DESTROY,
+    })
+
     const authIntegration = new HttpLambdaIntegration('AuthIntegration', authLambdaAlias)
 
     const httpApi = new apigwv2.HttpApi(this, 'Create-HttpProxyApi', {
       corsPreflight: {
-        allowHeaders: ['Authorization', 'Content-Type'],
-        allowMethods: [
-          apigwv2.CorsHttpMethod.GET,
-          apigwv2.CorsHttpMethod.HEAD,
-          apigwv2.CorsHttpMethod.OPTIONS,
-          apigwv2.CorsHttpMethod.POST,
-        ],
+        allowHeaders: ['Authorization', 'Content-Type', 'x-apigateway-header', 'x-amz-date'],
+        allowMethods: [apigwv2.CorsHttpMethod.GET, apigwv2.CorsHttpMethod.POST, apigwv2.CorsHttpMethod.OPTIONS],
         allowOrigins: ['https://d28a55f3780vki.cloudfront.net'],
-        allowCredentials: true,
       },
     })
 

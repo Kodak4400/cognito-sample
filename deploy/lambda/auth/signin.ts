@@ -68,12 +68,10 @@ export default class SignIn {
     const accessToken = cognitoUserAuth.getAccessToken().getJwtToken() // アクセストークン
     const refreshToken = cognitoUserAuth.getRefreshToken().getToken() // 更新トークン
 
-    Log.debug(
-      `{ idToken: ${idToken}, accessToken: ${accessToken}, refreshToken: ${refreshToken} }`,
-    )
+    Log.debug(`{ "idToken": "${idToken}", "accessToken":" ${accessToken}", "refreshToken": "${refreshToken}" }`)
 
     return await httpResponseBuilder(200, {
-      message: `{ idToken: ${idToken}, accessToken: ${accessToken}, refreshToken: ${refreshToken} }`,
+      message: `{ "idToken": "${idToken}", "accessToken":" ${accessToken}", "refreshToken": "${refreshToken}" }`,
     })
   }
 }

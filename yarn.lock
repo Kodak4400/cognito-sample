@@ -5023,6 +5023,11 @@ vscode-vue-languageservice@0.29.8:
     vscode-pug-languageservice "0.29.8"
     vscode-typescript-languageservice "0.29.8"
 
+vue-element-loading@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/vue-element-loading/-/vue-element-loading-3.0.1.tgz#3c4ab77d1b7e16870d036c386638eb31635c3bcd"
+  integrity sha512-WzQJKTmOWBEfKzVoRr9Mk2aLYVxJNEatWYTNuOTG8SwWGvNI9ZfnJBxVwqTpBPclGLG7bZqTLfco+BP3ebu5Sw==
+
 vue-router@^4.0.12:
   version "4.0.12"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.0.12.tgz#8dc792cddf5bb1abcc3908f9064136de7e13c460"
