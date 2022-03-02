@@ -17,30 +17,25 @@ export const handler: CloudFrontRequestHandler = async (event, context, callback
   const request = event.Records[0].cf.request
 
   Log.info('headers', request)
-  for (const cookie of request.headers['cookie']) {
-    if (cookie.key === 'cookie') {
-      // 認証OK
-      try {
-        const cookies = cookie.value.split(';')
-        for (const c of cookies) {
-          if (c.split('idToken=')[1]) {
-            Log.info(c.split('idToken=')[1])
-            const payload = await verifier.verify(c.split('idToken=')[1])
-            Log.info('Token is valid. Payload:', payload)
-            callback(null, request)
-            return null
-          }
+  try {
+    for (const cookie of request.headers['cookie']) {
+      const values = cookie.value.split(';')
+      for (const value of values) {
+        if (value.split('idToken=')[1]) {
+          Log.info(value.split('idToken=')[1])
+          const payload = await verifier.verify(value.split('idToken=')[1])
+          Log.info('Token is valid. Payload:', payload)
+          request.uri = '/private'
+          callback(null, request)
+          return undefined
         }
-      } catch {
-        Log.info('Token not valid!')
       }
     }
+    throw new Error('Token not valid!')
+  } catch (error: unknown) {
+    // 認証NG
+    request.uri = '/404'
+    callback(null, request)
+    return undefined
   }
-
-  // 認証NG
-  callback(null, {
-    status: '401',
-    statusDescription: 'Unauthorized',
-    body: '<h1>401 Unauthorized</h1>',
-  })
 }

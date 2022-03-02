@@ -12,12 +12,15 @@
 <script lang="ts" setup>
 import { useHead } from '@vueuse/head'
 import * as axios from 'axios'
-import { ref } from 'vue';
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import VueElementLoading from "vue-element-loading"
+
+if (typeof document !== 'undefined') {
+  import('vue-element-loading')
+}
 
 useHead({
-  title: 'Cognito-Sample Login'
+  title: 'Cognito-Sample Login',
 })
 
 const show = ref(false)
@@ -30,26 +33,29 @@ interface ApiResponse {
 }
 interface ApiResponseMessage {
   idToken: string
-  accessToken: string,
+  accessToken: string
   refreshToken: string
 }
 
 const login = async () => {
   show.value = true
   try {
-    const result = await axios.default.post<ApiResponse>('https://t5vaz2h0fg.execute-api.ap-northeast-1.amazonaws.com/api/signin', {
-      Username: username.value,
-      Password: password.value
-    }, {
-      headers: { 'Content-Type': 'application/json' }
-    })
+    const result = await axios.default.post<ApiResponse>(
+      'https://2ha2ddgulg.execute-api.ap-northeast-1.amazonaws.com/api/signin',
+      {
+        Username: username.value,
+        Password: password.value,
+      },
+      {
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
     const message = JSON.parse(result.data.message) as Partial<ApiResponseMessage>
     document.cookie = `idToken=${message.idToken}`
     router.push('/private')
-  } catch(error: unknown) {
+  } catch (error: unknown) {
     router.push('/404')
   }
   show.value = false
 }
-
 </script>

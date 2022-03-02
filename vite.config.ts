@@ -13,7 +13,7 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
-  plugins: [vue(), Pages(), Components()],
+  plugins: [vue(), Pages(), Components(), ],
   test: {
     globals: true,
     environment: 'node',

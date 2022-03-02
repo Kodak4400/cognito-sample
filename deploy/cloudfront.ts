@@ -24,10 +24,7 @@ export class CloudFrontStack extends Stack {
       code: lambda.Code.fromAsset('cdk-dist/edge'),
       handler: 'index.handler',
       runtime: lambda.Runtime.NODEJS_14_X,
-      environment: {
-        USER_POOL_ID: runCode(`return process.env.${params.USER_POOL_ID}`),
-        CLIENT_ID: runCode(`return process.env.${params.CLIENT_ID}`),
-      },
+      environment: {},
     })
 
     const s3Bucket = s3.Bucket.fromBucketName(this, 'Get-S3Bucket-Origin', params.STATIC_STATIC_WEBSITE_HOSTING_BUCKET)
@@ -66,7 +63,7 @@ export class CloudFrontStack extends Stack {
       allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
       cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
       compress: true,
-      // cachePolicy: enableCachePolicy,
+      cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
       viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       edgeLambdas: [
         {
