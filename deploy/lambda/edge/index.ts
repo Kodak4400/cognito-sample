@@ -25,7 +25,6 @@ export const handler: CloudFrontRequestHandler = async (event, context, callback
           Log.info(value.split('idToken=')[1])
           const payload = await verifier.verify(value.split('idToken=')[1])
           Log.info('Token is valid. Payload:', payload)
-          request.uri = '/private'
           callback(null, request)
           return undefined
         }
@@ -34,7 +33,7 @@ export const handler: CloudFrontRequestHandler = async (event, context, callback
     throw new Error('Token not valid!')
   } catch (error: unknown) {
     // 認証NG
-    request.uri = '/404'
+    request.uri = '/404.html'
     callback(null, request)
     return undefined
   }

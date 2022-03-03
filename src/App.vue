@@ -1,7 +1,5 @@
 <template>
-  <client-only>
-    <main>
-      <router-view />
-    </main>
-  </client-only>
+  <main>
+    <router-view />
+  </main>
 </template>

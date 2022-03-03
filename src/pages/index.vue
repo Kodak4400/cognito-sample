@@ -5,19 +5,19 @@
     <label>パスワード</label>
     <input type="text" v-model="password" />
     <button @click="login" v-if="!show">ログイン</button>
-    <vue-element-loading :active="show" is-full-screen />
+    <!-- <vue-element-loading :active="show" is-full-screen /> -->
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useHead } from '@vueuse/head'
-import * as axios from 'axios'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useHead } from '@vueuse/head';
+import * as axios from 'axios';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-if (typeof document !== 'undefined') {
-  import('vue-element-loading')
-}
+// if (typeof document !== 'undefined') {
+//   import('vue-element-loading')
+// }
 
 useHead({
   title: 'Cognito-Sample Login',

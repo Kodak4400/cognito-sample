@@ -1,10 +1,6 @@
 import {
   aws_cloudfront as cloudfront,
-  aws_cloudfront_origins as cloudfrontOrigins,
-  aws_lambda as lambda,
-  aws_s3 as s3,
-  Stack,
-  StackProps
+  aws_cloudfront_origins as cloudfrontOrigins, aws_iam as iam, aws_lambda as lambda, aws_s3 as s3, Stack, StackProps
 } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
 import { CdkJsonParams, Stage } from './@types/resource'
@@ -20,12 +16,35 @@ export class CloudFrontStack extends Stack {
 
     const params: CdkJsonParams[Stage] = this.node.tryGetContext(props.stage)
 
+    const lambdaEdgePolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        'lambda:GetFunction',
+        'lambda:EnableReplication*',
+        'iam:CreateServiceLinkedRole',
+        'cloudfront:UpdateDistribution',
+        'cloudfront:CreateDistribution*',
+      ],
+      resources: ['*'],
+    })
+
+    // const lambdaEdgeRole = new iam.Role(this, 'Create-LambdaEdge-Role', {
+    //   assumedBy: new iam.CompositePrincipal(
+    //     new iam.ServicePrincipal('lambda.amazonaws.com'),
+    //     new iam.ServicePrincipal('edgelambda.amazonaws.com'),
+    //   ),
+    //   managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole')],
+    //   path: '/lambda/',
+    // })
+
     const jwtVerifyEdgeFunction = new cloudfront.experimental.EdgeFunction(this, 'Create-Jwt-Verify-Edge-Function', {
       code: lambda.Code.fromAsset('cdk-dist/edge'),
       handler: 'index.handler',
       runtime: lambda.Runtime.NODEJS_14_X,
       environment: {},
+      // role: lambdaEdgeRole,
     })
+    jwtVerifyEdgeFunction.addToRolePolicy(lambdaEdgePolicy)
 
     const s3Bucket = s3.Bucket.fromBucketName(this, 'Get-S3Bucket-Origin', params.STATIC_STATIC_WEBSITE_HOSTING_BUCKET)
     const bucketNameUrl = s3Bucket.bucketWebsiteUrl.replace('http://', '')
