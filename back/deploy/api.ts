@@ -1,6 +1,11 @@
 import * as apigwv2 from '@aws-cdk/aws-apigatewayv2-alpha'
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha'
-import { aws_iam as iam, aws_lambda as lambda, Duration, Stack, StackProps } from 'aws-cdk-lib'
+import {
+  aws_iam as iam,
+  aws_lambda as lambda,
+  aws_logs as logs, Duration, RemovalPolicy, Stack,
+  StackProps
+} from 'aws-cdk-lib'
 import { Construct } from 'constructs'
 import { CdkJsonParams, Stage } from './@types/resource'
 import { runCode } from './utils'
@@ -9,7 +14,7 @@ interface extendProps extends StackProps {
   stage: Stage
 }
 
-export class APIStack extends Stack {
+export class ApiStack extends Stack {
   constructor(scope: Construct, id: string, props: extendProps) {
     super(scope, id, props)
 
@@ -22,7 +27,7 @@ export class APIStack extends Stack {
     })
 
     const authLambda = new lambda.Function(this, 'Create-AuthLambda', {
-      code: lambda.Code.fromAsset('cdk-dist/auth/handler'),
+      code: lambda.Code.fromAsset('dist/auth'),
       handler: 'index.handler',
       runtime: lambda.Runtime.NODEJS_14_X,
       environment: {
@@ -39,35 +44,31 @@ export class APIStack extends Stack {
       version: authLambda.currentVersion,
     })
 
+    new logs.LogGroup(this, 'AuthLambda-Function-LogGroup', {
+      logGroupName: '/aws/lambda/' + authLambdaAlias.functionName,
+      retention: logs.RetentionDays.ONE_DAY,
+      removalPolicy: RemovalPolicy.DESTROY,
+    })
+
     const authIntegration = new HttpLambdaIntegration('AuthIntegration', authLambdaAlias)
 
     const httpApi = new apigwv2.HttpApi(this, 'Create-HttpProxyApi', {
       corsPreflight: {
-        allowHeaders: ['Authorization'],
-        allowMethods: [
-          apigwv2.CorsHttpMethod.GET,
-          apigwv2.CorsHttpMethod.HEAD,
-          apigwv2.CorsHttpMethod.OPTIONS,
-          apigwv2.CorsHttpMethod.POST,
-        ],
-        allowOrigins: ['*'],
+        allowHeaders: ['Authorization', 'Content-Type', 'x-apigateway-header', 'x-amz-date'],
+        allowMethods: [apigwv2.CorsHttpMethod.GET, apigwv2.CorsHttpMethod.POST, apigwv2.CorsHttpMethod.OPTIONS],
+        allowOrigins: ['https://d28a55f3780vki.cloudfront.net'],
       },
     })
 
     httpApi.addRoutes({
-      path: '/user',
-      methods: [apigwv2.HttpMethod.GET],
-      integration: authIntegration,
-    })
-    httpApi.addRoutes({
-      path: '/user',
+      path: '/api/signin',
       methods: [apigwv2.HttpMethod.POST],
       integration: authIntegration,
     })
-
-    new apigwv2.HttpStage(this, 'Stage', {
-      httpApi: httpApi,
-      stageName: 'beta',
+    httpApi.addRoutes({
+      path: '/api/signup',
+      methods: [apigwv2.HttpMethod.POST],
+      integration: authIntegration,
     })
   }
 }

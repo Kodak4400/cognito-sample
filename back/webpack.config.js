@@ -5,8 +5,8 @@ const Dotenv = require('dotenv-webpack')
 module.exports = {
   target: 'node',
   entry: {
-    edge: path.resolve(__dirname, './deploy/lambda/edge/index.ts'),
-    auth: path.resolve(__dirname, './deploy/lambda/auth/index.ts'),
+    edge: path.resolve(__dirname, './lambda/edge/index.ts'),
+    auth: path.resolve(__dirname, './lambda/auth/index.ts'),
   },
   // build時は`dependencies`だけを読み込むようにする
   externals: [
@@ -20,7 +20,7 @@ module.exports = {
 
   output: {
     filename: '[name]/index.js',
-    path: path.resolve(__dirname, './cdk-dist/'),
+    path: path.resolve(__dirname, './dist/'),
     libraryTarget: 'commonjs2', // ライブラリの形式 tsconfig.jsonのmoduleとほぼ同じ。commonjs2かクライアントサイドならumdを設定することが多い。
   },
   // source-mapの種類 => https://webpack.js.org/configuration/devtool/

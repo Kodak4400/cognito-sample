@@ -1,80 +1,61 @@
 <template>
-  <form>
-    <label>ユーザーID</label>
-    <input type="text" v-model="userId" />
+  <div>
+    <label>ユーザー名</label>
+    <input type="text" v-model="username" />
     <label>パスワード</label>
     <input type="text" v-model="password" />
-    <button @click.prevent="login">ログイン</button>
-  </form>
+    <button @click="login" v-if="!show">ログイン</button>
+    <!-- <vue-element-loading :active="show" is-full-screen /> -->
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { useHead } from '@vueuse/head'
-import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js'
+import { useHead } from '@vueuse/head';
+import * as axios from 'axios';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+// if (typeof document !== 'undefined') {
+//   import('vue-element-loading')
+// }
 
 useHead({
-  title: 'Hello, Vite + vite-vue-pages + ViteSSG'
+  title: 'Cognito-Sample Login',
 })
 
-const userId = ref('')
+const show = ref(false)
+const username = ref('')
 const password = ref('')
+const router = useRouter()
 
-const login = () => {
-  const id = userId.value
-  const pass = password.value
+interface ApiResponse {
+  message: string
+}
+interface ApiResponseMessage {
+  idToken: string
+  accessToken: string
+  refreshToken: string
+}
 
-  const authenticationData = {
-      UserId: id,
-      Password: pass,
-  }
-  const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(
-      authenticationData
-  )
-
-  const poolData = {
-    UserPoolId: '',
-    ClientId: ''
-  };
-  const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData)
-  const userData = {
-    Username: id,
-    Pool: userPool,
-  }
-  const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-  cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: function(result) {
-          var idToken = result.getIdToken().getJwtToken();          // IDトークン
-          var accessToken = result.getAccessToken().getJwtToken();  // アクセストークン
-          var refreshToken = result.getRefreshToken().getToken();   // 更新トークン
-
-          console.log("idToken : " + idToken);
-          console.log("accessToken : " + accessToken);
-          console.log("refreshToken : " + refreshToken);
-
-          document.cookie = `idToken=${idToken}`
+const login = async () => {
+  show.value = true
+  try {
+    const result = await axios.default.post<ApiResponse>(
+      'https://2ha2ddgulg.execute-api.ap-northeast-1.amazonaws.com/api/signin',
+      {
+        Username: username.value,
+        Password: password.value,
       },
-      onFailure: function(err) {
-          alert(err.message || JSON.stringify(err));
+      {
+        headers: { 'Content-Type': 'application/json' },
       },
-
-      newPasswordRequired: function(userAttributes, requiredAttributes) {
-        delete userAttributes.email_verified;
-        cognitoUser.completeNewPasswordChallenge('', userAttributes, {
-          onSuccess: function(result) {
-            console.log('call result: ' + result);
-          },
-          onFailure: function(err) {
-            alert(err.message || JSON.stringify(err));
-          },
-        });
-      },
-    });
+    )
+    const message = JSON.parse(result.data.message) as Partial<ApiResponseMessage>
+    document.cookie = `idToken=${message.idToken}`
+    router.push('/scratch/')
+  } catch (error: unknown) {
+    router.push('/404')
   }
-
-return {
-  password,
-  login,
-  // update
+  show.value = false
 }
 </script>

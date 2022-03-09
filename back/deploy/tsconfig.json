@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "ES2020", // トランスパイルした後のターゲットを指定（Babelでも同様のことができるが、TypeScriptを導入していればBabelは不要）
+    "module": "commonjs", // common.jsかクライアントサイドならamdが一般的だが、最近はumdを設定することが多い。 => https://qiita.com/suin/items/3a73eb73eea51cfca9e1
+    "sourceMap": true,
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true, // *.d.tsファイルの型チェックをスキップする
+    "forceConsistentCasingInFileNames": true, // import時にファイルパスの文字列で大文字小文字を区別する
+    "resolveJsonModule": true,
+    "rootDir": ".",
+    // "declaration": false
+  },
+  "include": ["../cdk.json"],
+}

@@ -9,10 +9,10 @@ if (result.error) {
   throw result.error
 }
 
-describe('lambda/auth/singin.ts', () => {
+describe('lambda/auth/signin.ts', () => {
   const event: APIGatewayProxyEventV2 = {
     version: '2.0',
-    routeKey: 'POST /api/singnin',
+    routeKey: 'POST /api/signin',
     rawPath: '/xxxx',
     rawQueryString: 'worsds=aab&size=5&from=10&g=v',
     headers: {
