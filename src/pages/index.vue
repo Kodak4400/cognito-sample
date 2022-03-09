@@ -52,7 +52,7 @@ const login = async () => {
     )
     const message = JSON.parse(result.data.message) as Partial<ApiResponseMessage>
     document.cookie = `idToken=${message.idToken}`
-    router.push('/private')
+    router.push('/scratch/')
   } catch (error: unknown) {
     router.push('/404')
   }

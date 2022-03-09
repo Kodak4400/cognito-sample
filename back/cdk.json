@@ -1,0 +1,25 @@
+{
+  "app": "npx ts-node deploy/cdk.ts",
+  "context": {
+    "dev": {
+      "USER_POOL_NAME": "USER_POOL_NAME",
+      "USER_POOL_CLIENT_NAME": "USER_POOL_CLIENT_NAME",
+      "USER_POOL_ID": "USER_POOL_ID",
+      "TOKEN_USE": "TOKEN_USE",
+      "CLIENT_ID": "CLIENT_ID",
+      "STATIC_STATIC_WEBSITE_HOSTING_BUCKET": "cognito.sample.web.kodak.dev",
+      "CLOUDFRONT_LOG_BUCKET": "cognito.sample.cloudfront.log.kodak.dev",
+      "CLOUDFRONT_REFERER": "CLOUDFRONT_REFERER"
+    },
+    "prod": {
+      "USER_POOL_NAME": "USER_POOL_NAME",
+      "USER_POOL_CLIENT_NAME": "USER_POOL_CLIENT_NAME",
+      "USER_POOL_ID": "USER_POOL_ID",
+      "TOKEN_USE": "TOKEN_USE",
+      "CLIENT_ID": "CLIENT_ID",
+      "STATIC_STATIC_WEBSITE_HOSTING_BUCKET": "cognito.sample.web.kodak.prod",
+      "CLOUDFRONT_LOG_BUCKET": "cognito.sample.cloudfront.log.kodak.prod",
+      "CLOUDFRONT_REFERER": "CLOUDFRONT_REFERER"
+    }
+  }
+}
