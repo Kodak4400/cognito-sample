@@ -27,7 +27,7 @@ export class ApiStack extends Stack {
     })
 
     const authLambda = new lambda.Function(this, 'Create-AuthLambda', {
-      code: lambda.Code.fromAsset('cdk-dist/auth'),
+      code: lambda.Code.fromAsset('dist/auth'),
       handler: 'index.handler',
       runtime: lambda.Runtime.NODEJS_14_X,
       environment: {

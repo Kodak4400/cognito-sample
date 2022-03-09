@@ -9,7 +9,6 @@
     "build": "yarn clean && cross-env vite-ssg build",
     "build:lambda": "yarn clean:lambda && webpack --mode development",
     "preview": "vite preview",
-    "dev-cdk-synth": "npx cdk synth -c env=dev",
     "test": "vitest"
   },
   "dependencies": {

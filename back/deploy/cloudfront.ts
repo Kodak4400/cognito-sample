@@ -38,7 +38,7 @@ export class CloudFrontStack extends Stack {
     // })
 
     const jwtVerifyEdgeFunction = new cloudfront.experimental.EdgeFunction(this, 'Create-Jwt-Verify-Edge-Function', {
-      code: lambda.Code.fromAsset('cdk-dist/edge'),
+      code: lambda.Code.fromAsset('dist/edge'),
       handler: 'index.handler',
       runtime: lambda.Runtime.NODEJS_14_X,
       environment: {},
@@ -98,7 +98,7 @@ export class CloudFrontStack extends Stack {
       // ],
     }
     const behaviors: Record<string, cloudfront.BehaviorOptions> = {
-      '/private/*': s3BehaviorAtDetailsProps,
+      '/scratch*': s3BehaviorAtDetailsProps,
     }
 
     const loggingBucket = new s3.Bucket(this, `Create-CloudFront-Log-Bucket`, {

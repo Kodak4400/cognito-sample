@@ -6,9 +6,12 @@
   "private": true,
   "scripts": {
     "clean": "rimraf dist/*",
-    "build": "yarn clean && webpack --mode development"
+    "build": "yarn clean && webpack --mode development",
+    "dev-cdk-synth": "npx cdk synth -c env=dev"
   },
   "devDependencies": {
+    "@aws-cdk/aws-apigatewayv2-alpha": "^2.15.0-alpha.0",
+    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.15.0-alpha.0",
     "@types/jest": "^27.4.1",
     "@types/node": "16",
     "@typescript-eslint/eslint-plugin": "^5.14.0",
