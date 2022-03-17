@@ -8,8 +8,7 @@ module.exports = {
   parser: '@typescript-eslint/parser', // ESLintがTypeScriptを理解するParserを指定
   parserOptions: {
     sourceType: 'module', // これがないとパースできない
-    // project: ['./tsconfig.eslint.json'], // TypeScriptの対象を指定
-    project: ['./tsconfig.json', './deploy/tsconfig.json'], // TypeScriptの対象を指定
+    project: './tsconfig.eslint.json', // TypeScriptの対象を指定
   },
   plugins: [
     '@typescript-eslint', // TypeScript用ESLintのルールプラグインを導入

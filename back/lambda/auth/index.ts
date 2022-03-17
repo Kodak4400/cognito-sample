@@ -1,6 +1,7 @@
 import Log from '@dazn/lambda-powertools-logger'
 import { APIGatewayProxyHandlerV2 } from 'aws-lambda'
 import httpResponseBuilder from '../modules/HttpResponseBuilder'
+import Cookie from './cookie'
 import SignIn from './signin'
 import SignUp from './signup'
 
@@ -13,6 +14,8 @@ export const handler: APIGatewayProxyHandlerV2 = async event => {
         return await new SignIn().handler(event)
       case 'POST /api/signup':
         return await new SignUp().handler(event)
+      case 'POST /api/cookie':
+        return await new Cookie().handler(event)
       default:
         return await httpResponseBuilder(400, {
           message: 'No route.',

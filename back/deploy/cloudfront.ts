@@ -1,10 +1,17 @@
 import {
   aws_cloudfront as cloudfront,
-  aws_cloudfront_origins as cloudfrontOrigins, aws_iam as iam, aws_lambda as lambda, aws_s3 as s3, Stack, StackProps
+  aws_cloudfront_origins as cloudfrontOrigins,
+  aws_iam as iam,
+  aws_lambda as lambda,
+  aws_s3 as s3, Stack,
+  StackProps
 } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
+import * as fs from 'fs'
+import { resolve } from 'path'
 import { CdkJsonParams, Stage } from './@types/resource'
 import { runCode } from './utils'
+
 
 interface extendProps extends StackProps {
   stage: Stage
@@ -97,8 +104,38 @@ export class CloudFrontStack extends Stack {
       //   },
       // ],
     }
+
+    const pubKey = new cloudfront.PublicKey(this, 'MyPubKey', {
+      encodedKey: fs.readFileSync(resolve(__dirname, 'cookie.pub'), 'utf-8'),
+    })
+    const keyGroup = new cloudfront.KeyGroup(this, 'MyKeyGroup', {
+      items: [pubKey],
+    })
+
+    const s3BehaviorAtCookieProps: cloudfront.BehaviorOptions = {
+      origin: s3Origin,
+      allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
+      cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
+      compress: true,
+      cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+      viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      trustedKeyGroups: [keyGroup],
+      // edgeLambdas: [
+      //   {
+      //     functionVersion: jwtVerifyEdgeFunction.currentVersion,
+      //     eventType: cloudfront.LambdaEdgeEventType.VIEWER_REQUEST,
+      //   },
+      // ],
+      // functionAssociations: [
+      //   {
+      //     function: cfFunction,
+      //     eventType: cloudfront.FunctionEventType.VIEWER_RESPONSE,
+      //   },
+      // ],
+    }
     const behaviors: Record<string, cloudfront.BehaviorOptions> = {
       '/scratch*': s3BehaviorAtDetailsProps,
+      '/cookie*': s3BehaviorAtCookieProps,
     }
 
     const loggingBucket = new s3.Bucket(this, `Create-CloudFront-Log-Bucket`, {

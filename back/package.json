@@ -6,8 +6,10 @@
   "private": true,
   "scripts": {
     "clean": "rimraf dist/*",
-    "build": "yarn clean && webpack --mode development",
-    "dev-cdk-synth": "npx cdk synth -c env=dev"
+    "build:cp": "cp ./deploy/cookie.pem ./dist/auth/",
+    "build": "yarn clean && webpack --mode development && yarn build:cp",
+    "dev-cdk-synth": "npx cdk synth -c env=dev",
+    "test": "jest --coverage"
   },
   "devDependencies": {
     "@aws-cdk/aws-apigatewayv2-alpha": "^2.15.0-alpha.0",

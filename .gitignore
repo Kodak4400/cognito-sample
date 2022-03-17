@@ -24,6 +24,9 @@ cdk-dist
 *.njsproj
 *.sln
 *.sw?
+*.pub
+*.pem
+coverage
 
 cdk.out
 .env

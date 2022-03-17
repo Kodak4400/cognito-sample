@@ -36,12 +36,17 @@ interface ApiResponseMessage {
   accessToken: string
   refreshToken: string
 }
+interface ApiResponseCookiesMessage {
+  "CloudFront-Policy": string
+  "CloudFront-Signature": string
+  "CloudFront-Key-Pair-Id": string
+}
 
 const login = async () => {
   show.value = true
   try {
     const result = await axios.default.post<ApiResponse>(
-      'https://2ha2ddgulg.execute-api.ap-northeast-1.amazonaws.com/api/signin',
+      'https://kmdcr0evuh.execute-api.ap-northeast-1.amazonaws.com/api/sign',
       {
         Username: username.value,
         Password: password.value,
@@ -50,9 +55,17 @@ const login = async () => {
         headers: { 'Content-Type': 'application/json' },
       },
     )
-    const message = JSON.parse(result.data.message) as Partial<ApiResponseMessage>
-    document.cookie = `idToken=${message.idToken}`
-    router.push('/scratch/')
+    console.log('start')
+    console.log(result.data.message)
+    const message = result.data.message as Partial<ApiResponseCookiesMessage>
+    console.log(message)
+    console.log('end')
+    // document.cookie = `idToken=${message.idToken}`
+    document.cookie = `CloudFront-Policy=${message['CloudFront-Policy']}`
+    document.cookie = `CloudFront-Signature=${message['CloudFront-Signature']}`
+    document.cookie = `CloudFront-Key-Pair-Id=${message['CloudFront-Key-Pair-Id']}`
+    // router.push('/scratch/')
+    router.push('/cookie/')
   } catch (error: unknown) {
     router.push('/404')
   }

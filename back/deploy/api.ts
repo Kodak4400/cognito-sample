@@ -33,6 +33,8 @@ export class ApiStack extends Stack {
       environment: {
         USER_POOL_ID: runCode(`return process.env.${params.USER_POOL_ID}`),
         CLIENT_ID: runCode(`return process.env.${params.CLIENT_ID}`),
+        CF_BEHAVIOR_URL: runCode(`return process.env.${params.CF_BEHAVIOR_URL}`),
+        PRIVATE_KEY: runCode(`return process.env.${params.PRIVATE_KEY}`),
       },
       role: lambdaRole,
       timeout: Duration.seconds(30),
@@ -45,30 +47,31 @@ export class ApiStack extends Stack {
     })
 
     new logs.LogGroup(this, 'AuthLambda-Function-LogGroup', {
-      logGroupName: '/aws/lambda/' + authLambdaAlias.functionName,
+      logGroupName: '/aws/lambda/' + authLambda.functionName,
       retention: logs.RetentionDays.ONE_DAY,
       removalPolicy: RemovalPolicy.DESTROY,
     })
 
-    const authIntegration = new HttpLambdaIntegration('AuthIntegration', authLambdaAlias)
+    const authIntegrationSignin = new HttpLambdaIntegration('AuthIntegration', authLambdaAlias)
+    const authIntegrationCookie = new HttpLambdaIntegration('AuthIntegration', authLambdaAlias)
 
     const httpApi = new apigwv2.HttpApi(this, 'Create-HttpProxyApi', {
       corsPreflight: {
         allowHeaders: ['Authorization', 'Content-Type', 'x-apigateway-header', 'x-amz-date'],
         allowMethods: [apigwv2.CorsHttpMethod.GET, apigwv2.CorsHttpMethod.POST, apigwv2.CorsHttpMethod.OPTIONS],
-        allowOrigins: ['https://d28a55f3780vki.cloudfront.net'],
+        allowOrigins: [runCode(`return process.env.${params.CLOUD_FRONT_URL}`)],
       },
     })
 
     httpApi.addRoutes({
       path: '/api/signin',
       methods: [apigwv2.HttpMethod.POST],
-      integration: authIntegration,
+      integration: authIntegrationSignin,
     })
     httpApi.addRoutes({
-      path: '/api/signup',
+      path: '/api/cookie',
       methods: [apigwv2.HttpMethod.POST],
-      integration: authIntegration,
+      integration: authIntegrationCookie,
     })
   }
 }
