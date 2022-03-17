@@ -10,8 +10,11 @@
     "forceConsistentCasingInFileNames": true // import時にファイルパスの文字列で大文字小文字を区別する
   },
   "include": [
-    // コンパイル対象（要件に合わせて設定してください）
     "lambda/**/*.ts",
     "tests/**/*.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
   ]
 }

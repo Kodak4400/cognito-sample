@@ -2,17 +2,17 @@ import { APIGatewayProxyEventV2 } from 'aws-lambda'
 import context from 'aws-lambda-mock-context'
 import * as dotenv from 'dotenv'
 import { describe, expect, it } from 'vitest'
-import { handler } from '../../../deploy/lambda/auth'
+import { handler } from '../../../lambda/auth'
 
 const result = dotenv.config()
 if (result.error) {
   throw result.error
 }
 
-describe('lambda/auth/singup.ts', () => {
+describe('lambda/auth/cookie.ts', () => {
   const event: APIGatewayProxyEventV2 = {
     version: '2.0',
-    routeKey: 'POST /api/singup',
+    routeKey: 'POST /api/cookie',
     rawPath: '/xxxx',
     rawQueryString: 'worsds=aab&size=5&from=10&g=v',
     headers: {
@@ -47,20 +47,20 @@ describe('lambda/auth/singup.ts', () => {
         userAgent: 'Mozilla/5.0 (Macintosh;',
       },
       requestId: 'RandomId',
-      routeKey: 'POST /api/singup',
+      routeKey: 'POST /api/cookie',
       stage: '$default',
       time: '19/Mar/2021:11:27:42 +0000',
       timeEpoch: 1616153262547,
     },
-    body: '{ "Username": "admin", "Password": "Zaq1@wsxcd", "Email": "special0747@gmail.com" }',
+    body: '{ "Username": "admin", "Password": "Zaq1@wsxcd" }',
     isBase64Encoded: false,
   }
 
   it('handler', async () => {
-    expect(await handler(event, context(), () => {})).toEqual({
+    expect(await handler(event, context({ timeout: 30000 }), () => {})).toEqual({
       isBase64Encoded: false,
       statusCode: 200,
-      body: JSON.stringify('Sign Up OK.'),
+      body: JSON.stringify('SignUp OK.'),
       headers: {
         'content-type': 'application/json',
       },

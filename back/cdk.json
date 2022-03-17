@@ -9,7 +9,10 @@
       "CLIENT_ID": "CLIENT_ID",
       "STATIC_STATIC_WEBSITE_HOSTING_BUCKET": "cognito.sample.web.kodak.dev",
       "CLOUDFRONT_LOG_BUCKET": "cognito.sample.cloudfront.log.kodak.dev",
-      "CLOUDFRONT_REFERER": "CLOUDFRONT_REFERER"
+      "CLOUDFRONT_REFERER": "CLOUDFRONT_REFERER",
+      "CLOUD_FRONT_URL": "CLOUD_FRONT_URL",
+      "CF_BEHAVIOR_URL": "CF_BEHAVIOR_URL",
+      "PRIVATE_KEY": "PRIVATE_KEY"
     },
     "prod": {
       "USER_POOL_NAME": "USER_POOL_NAME",
@@ -19,7 +22,10 @@
       "CLIENT_ID": "CLIENT_ID",
       "STATIC_STATIC_WEBSITE_HOSTING_BUCKET": "cognito.sample.web.kodak.prod",
       "CLOUDFRONT_LOG_BUCKET": "cognito.sample.cloudfront.log.kodak.prod",
-      "CLOUDFRONT_REFERER": "CLOUDFRONT_REFERER"
+      "CLOUDFRONT_REFERER": "CLOUDFRONT_REFERER",
+      "CLOUD_FRONT_URL": "CLOUD_FRONT_URL",
+      "CF_BEHAVIOR_URL": "CF_BEHAVIOR_URL",
+      "PRIVATE_KEY": "PRIVATE_KEY"
     }
   }
 }
