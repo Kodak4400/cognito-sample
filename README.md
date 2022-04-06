@@ -1,8 +1,7 @@
-# AWS Cognito + Lambda@Edge + S3（Static website hosting）
+# サーバーレスでプライベートなページが実現可能かを試す
+## 案1) AWS Cognito + Lambda@Edge + S3（Static website hosting）
 
-サーバーレスでプライベートなページが実現可能かを試す。
-
-## 使用ツール
+### 使用ツール
 
  - CDK（v2）
   - Cognito
@@ -11,10 +10,21 @@
   - API Gateway + Lambda
  - Vite(Plugin SSG) + Vue3 + TypeScript
 
-## 構想
+### AWS 構成図
 
 <img src="./cognito-lambda_edge.png">
 
-## 使い方
 
-npx cdk deploy -c env=env
+## 案2) CloudFrontの署名付きCookie + S3（Static website hosting）
+
+### 使用ツール
+
+ - CDK（v2）
+  - Cognito // IDとパスワード保管用
+  - S3
+  - API Gateway + Lambda
+ - Vite(Plugin SSG) + Vue3 + TypeScript
+
+### AWS 構成図
+
+<img src="./cloudfront-cookie.png">
